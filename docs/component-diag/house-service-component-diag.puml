@@ -1,0 +1,20 @@
+@startuml "warmhouse"
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container(gateway, "Gateway API", "Java, Spring Boot", "Маршрутизация запросов")
+ContainerDb(dbHouse, "База данных домов", "PostgreSQL", "Хранение и предоставление данных о домах")
+
+
+Container_Boundary(houseServiceCont, "Сервис домов") {
+    Component(houseController, "House Controller", "Rest Controller", "Обработка вызовов API")
+    Component(houseService, "House Service", "Spring Bean", "Слой бизнес логики")
+    Component(houseRepository, "House Repository", "Spring Bean", "Работа с данными о домах")
+
+    Rel(houseController, houseService, "Использует")
+    Rel(houseService, houseRepository, "Использует")
+}
+
+Rel(gateway, houseController, "Вызов API методов", "HTTPS")
+Rel(houseRepository, dbHouse, "Использует", "JDBC")
+
+@enduml
