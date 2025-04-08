@@ -1,0 +1,40 @@
+@startuml
+
+class ScriptController {
+    +createScript(scriptData: ScriptData): void
+    +updateScript(scriptId: uuid, scriptData: ScriptData): void
+    +deleteScript(scriptId: uuid): void
+    +getScriptsByUser(userId: uuid): List<Script>
+}
+
+class ScriptService {
+    +createScript(scriptData: ScriptData): void
+    +updateScript(scriptId: uuid, scriptData: ScriptData): void
+    +deleteScript(scriptId: uuid): void
+    +executeScript(scriptId: uuid): void
+    +fetchScriptsByUser(userId: uuid): List<Script>
+}
+
+class ScriptScheduler {
+    +scheduleScript(scriptId: uuid, triggerTime: DateTime): void
+    +executeScheduledScripts(): void
+}
+
+class ScriptRepository {
+    +save(script: Script): void
+    +update(script: Script): void
+    +delete(scriptId: uuid): void
+    +findByUserId(userId: uuid): List<Script>
+}
+
+class ExternalControllerClient {
+    +sendCommandToDevice(deviceId: uuid, command: String): void
+    +fetchDeviceStatus(deviceId: uuid): DeviceStatus
+}
+
+ScriptController --> ScriptService : "Использует"
+ScriptService --> ScriptRepository : "Работает с данными о сценариях"
+ScriptService --> ExternalControllerClient : "Выполняет команды на устройствах"
+ScriptScheduler --> ScriptService : "Запускает сценарии по расписанию"
+
+@enduml

@@ -1,0 +1,27 @@
+@startuml "warmhouse"
+!include ../C4_Component.puml
+
+Container(gateway, "Gateway API", "Java, Spring Boot", "Маршрутизация запросов")
+ContainerDb(dbUsers, "База данных", "PostgreSQL", "Хранение и предоставление данных об устройствах")
+Container(tService, "Сервис телеметрии", "Java, Spring Boot")
+ContainerQueue(kafka, "Брокер сообщений Kafka", "Kafka")
+
+Container_Boundary(deviceServiceCont, "Сервис устройств") {
+    Component(deviceController, "Device Controller", "Rest Controller", "Обработка вызовов API")
+    Component(deviceService, "Device Service", "Spring Bean", "Слой бизнес логики")
+    Component(deviceKafkaListener, "Device Kafka Listener", "Spring Bean", "Слушатель очереди Kafka")
+    Component(deviceRepository, "Device Repository", "Spring Bean", "Работа с данными об устройствах")
+    Component(telemetryClient, "Telemetry Client", "Spring Bean", "Запросы в сервис Телеметрии")
+
+    Rel(deviceController, deviceService, "Использует")
+    Rel(deviceService, deviceRepository, "Использует")
+    Rel(deviceService, telemetryClient, "Использует")
+    Rel(deviceKafkaListener, deviceService, "Обработка сообщений с данными датчиков")
+}
+
+Rel(deviceKafkaListener, kafka, "Получение данных с датчиков")
+Rel(gateway, deviceController, "Вызов API методов", "HTTPS")
+Rel(telemetryClient, tService, "Запрос данных с датчиков", "HTTPS")
+BiRel(deviceRepository, dbUsers, "Использует", "JDBC")
+
+@enduml
