@@ -43,16 +43,16 @@
 
 **Диаграмма компонентов (Components)**
 
-[Диаграмма компонентов для сервиса устройств](docs/component-diag/device-service-component-diag.puml)
-[Диаграмма компонентов для сервиса домов](docs/component-diag/house-service-component-diag.puml)
-[Диаграмма компонентов для сервиса пользователей](docs/component-diag/user-service-component-diag.puml)
-[Диаграмма компонентов для сервиса телеметрии](docs/component-diag/telemetry-service-component-diag.puml)
-[Диаграмма компонентов для сервиса сценариев](docs/component-diag/script-service-component-diag.puml)
+* [Диаграмма компонентов для сервиса устройств](docs/component-diag/device-service-component-diag.puml)
+* [Диаграмма компонентов для сервиса домов](docs/component-diag/house-service-component-diag.puml)  
+* [Диаграмма компонентов для сервиса пользователей](docs/component-diag/user-service-component-diag.puml)  
+* [Диаграмма компонентов для сервиса телеметрии](docs/component-diag/telemetry-service-component-diag.puml)  
+* [Диаграмма компонентов для сервиса сценариев](docs/component-diag/script-service-component-diag.puml)  
 
 **Диаграмма кода (Code)**
 
-[Диаграмма кода для сервиса телеметрии](docs/code-diag/telemetry-code-diag.puml)
-[Диаграмма кода для сервиса сценариев](docs/code-diag/scripts-code-diag.puml)
+* [Диаграмма кода для сервиса телеметрии](docs/code-diag/telemetry-code-diag.puml)  
+* [Диаграмма кода для сервиса сценариев](docs/code-diag/scripts-code-diag.puml)  
 
 # Задание 3. Разработка ER-диаграммы
 
