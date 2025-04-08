@@ -1,5 +1,5 @@
 @startuml "warmhouse"
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include C4_Container.puml
 
 Person(user, "Пользователь", "Пользователь системы")
 
@@ -60,5 +60,6 @@ BiRel(telemetryService, dbTelemetryService, "Действие с данными"
 ' services to
 Rel(telemetryService, controllerDevicesExternal, "Получение информации с датчиков", "HTTPS")
 Rel(scriptsService, controllerDevicesExternal, "Выполнение сценария", "HTTPS")
+Rel(deviceService, telemetryService, "Получение последних данных с датчиков устройства", "HTTPS")
 
 @enduml

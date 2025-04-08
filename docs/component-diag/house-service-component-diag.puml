@@ -15,6 +15,6 @@ Container_Boundary(houseServiceCont, "Сервис домов") {
 }
 
 Rel(gateway, houseController, "Вызов API методов", "HTTPS")
-Rel(houseRepository, dbHouse, "Использует", "JDBC")
+BiRel(houseRepository, dbHouse, "Использует", "JDBC")
 
 @enduml

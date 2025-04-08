@@ -1,22 +1,25 @@
 @startuml "warmhouse"
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+!include ../C4_Component.puml
 
 Container(gateway, "Gateway API", "Java, Spring Boot", "Маршрутизация запросов")
 ContainerDb(dbUsers, "База данных сценариев", "PostgreSQL", "Хранение и предоставление данных о сценариях")
+Container_Ext(controllerDevicesExternal, "Контроллер устройств")
 
-
-Container_Boundary(scriptServiceCont, "Сервис пользователей") {
+Container_Boundary(scriptServiceCont, "Сервис сценариев") {
     Component(scriptController, "Script Controller", "Rest Controller", "Обработка вызовов API")
     Component(scriptService, "Script Service", "Spring Bean", "Слой бизнес логики")
     Component(scriptScheduler, "Script Scheduler", "Spring Bean", "Запуск сценариев по времени")
     Component(scriptRepository, "Script Repository", "Spring Bean", "Работа с данными о сценариях")
+    Component(extControllerClient, "External Controller Client", "Spring Bean", "Отправка запросов к контроллеру устройств")
 
     Rel(scriptController, scriptService, "Использует")
     Rel(scriptService, scriptRepository, "Использует")
-    Rel(from_alias, to_alias, "label")
+    Rel(scriptService, extControllerClient, "Использует")
+    Rel(scriptScheduler, scriptService, "Запуск сценариев")
 }
 
 Rel(gateway, scriptController, "Вызов API методов", "HTTPS")
-Rel(scriptRepository, dbUsers, "Использует", "JDBC")
+Rel(extControllerClient, controllerDevicesExternal, "Запрос на выполнение комманд", "HTTPS")
+BiRel(scriptRepository, dbUsers, "Использует", "JDBC")
 
 @enduml

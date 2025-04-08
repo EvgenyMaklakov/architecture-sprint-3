@@ -17,6 +17,6 @@ Container_Boundary(userServiceCont, "Сервис пользователей") {
 
 Rel(userService, authService, "Связь между профилем пользователя и учетной записью", "HTTPS")
 Rel(gateway, userController, "Вызов API методов", "HTTPS")
-Rel(userRepository, dbUsers, "Использует", "JDBC")
+BiRel(userRepository, dbUsers, "Использует", "JDBC")
 
 @enduml
