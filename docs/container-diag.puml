@@ -1,0 +1,65 @@
+@startuml "warmhouse"
+!include C4_Container.puml
+
+Person(user, "Пользователь", "Пользователь системы")
+
+System_Boundary(warmhouse, "Темплый дом"){
+    Container(webApp, "Веб-приложение", "JavaScript, React")
+    Container(mobileApp, "Мобильное приложение", "Kotlin")
+    Container(gateway, "Gateway API", "Java, Spring Boot", "Маршрутизация запросов")
+    Container(userService, "Сервис пользователей", "Java, Spring Boot", "Управления пользователями")
+    Container(deviceService, "Сервис устройств", "Java, Spring Boot", "Управления устройствами")
+    Container(scriptsService, "Сервис сценариев", "Java, Spring Boot", "Управления сценариями")
+    Container(houseService, "Сервис домов", "Java, Spring Boot", "Управления домами")
+    Container(telemetryService, "Сервис телеметрии", "Java, Spring Boot", "Прием данных с датчиков")
+    ContainerDb(dbUserService, "База данных пользователей", "PostgreSQL")
+    ContainerDb(dbDeviceService, "База данных устройств", "PostgreSQL")
+    ContainerDb(dbScriptsService, "База данных сценариев", "PostgreSQL")
+    ContainerDb(dbHouseService, "База данных домов", "PostgreSQL")
+    ContainerDb(dbTelemetryService, "База данных телеметрии", "MongoDB")
+    ContainerQueue(kafka, "Брокер сообщений", "Kafka")
+    }
+
+Container_Ext(authSerice, "Сервис IaM", "Keycloak")
+Container_Ext(controllerDevicesExternal, "Контроллер устройств")
+Container_Ext(deviceExternal, "Устройства умного дома")
+
+Rel(controllerDevicesExternal, deviceExternal, "Отправка команд устройствам")
+
+' user to apps
+Rel(user, webApp, "Использует")
+Rel(user, mobileApp, "Использует")
+
+' apps to
+Rel(webApp, gateway, "Запрос к системе", "HTTPS")
+Rel(mobileApp, gateway, "Запрос к системе", "HTTPS")
+Rel(webApp, authSerice, "Аутентификация/регистрация пользователя", "HTTPS")
+Rel(mobileApp, authSerice, "Аутентификация/регистрация пользователя", "HTTPS")
+
+
+' gateway to services
+Rel(gateway, authSerice, "Авторизация запросов", "HTTPS")
+Rel(gateway, userService, "Редактирование информации в профиле", "HTTPS")
+Rel(gateway, deviceService, "Привязка нового устройства, получение информации с устройства", "HTTPS")
+Rel(gateway, scriptsService, "Запуск/cоздание/редактирование/удаление сценариев", "HTTPS")
+Rel(gateway, houseService, "Создание/редактирование/удаление домов", "HTTPS")
+
+' kafka to
+Rel(kafka, deviceService, "Получение данных с устройств")
+
+' services to kafka
+Rel(telemetryService, kafka, "Отправка данных с устройств")
+
+' services to db
+BiRel(userService, dbUserService, "Действие с данными", "JDBC")
+BiRel(deviceService, dbDeviceService, "Действие с данными", "JDBC")
+BiRel(scriptsService, dbScriptsService, "Действие с данными", "JDBC")
+BiRel(houseService, dbHouseService, "Действие с данными", "JDBC")
+BiRel(telemetryService, dbTelemetryService, "Действие с данными", "JDBC")
+
+' services to
+Rel(telemetryService, controllerDevicesExternal, "Получение информации с датчиков", "HTTPS")
+Rel(scriptsService, controllerDevicesExternal, "Выполнение сценария", "HTTPS")
+Rel(deviceService, telemetryService, "Получение последних данных с датчиков устройства", "HTTPS")
+
+@enduml

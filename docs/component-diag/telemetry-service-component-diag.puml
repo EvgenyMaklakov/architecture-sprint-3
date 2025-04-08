@@ -1,0 +1,27 @@
+@startuml "warmhouse"
+!include ../C4_Component.puml
+
+Container(gateway, "Gateway API", "Java, Spring Boot", "Маршрутизация запросов")
+ContainerDb(dbUsers, "База данных", "MongoDB", "Хранение и предоставление данных о датчиках")
+ContainerQueue(kafka, "Брокер сообщений Kafka", "Kafka")
+Container_Ext(controllerDevicesExternal, "Контроллер устройств")
+
+Container_Boundary(telemetryServiceCont, "Сервис телеметрии") {
+    Component(telemetryController, "Telemetry Controller", "Rest Controller", "Обработка вызовов API")
+    Component(telemetryService, "Telemetry Service", "Spring Bean", "Слой бизнес логики")
+    Component(telemetryKafkaProducer, "Telemetry Kafka Producer", "Spring Bean", "Продюсер Kafka")
+    Component(telemetryRepository, "Telemetry Repository", "Spring Bean", "Работа с данными")
+    Component(extControllerClient, "External Controller Client", "Spring Bean", "Отправка запросов к контроллеру устройств")
+
+    Rel(telemetryController, telemetryService, "Использует")
+    Rel(telemetryService, telemetryRepository, "Использует")
+    Rel(telemetryService, extControllerClient, "Использует")
+    Rel(telemetryService, telemetryKafkaProducer, "Отправка сообщений с данными датчиков")
+}
+
+Rel(telemetryKafkaProducer, kafka, "Отправка сообщений с данными датчиков")
+Rel(gateway, telemetryController, "Вызов API методов", "HTTPS")
+Rel(extControllerClient, controllerDevicesExternal, "Получение данных с устройств", "HTTPS")
+BiRel(telemetryRepository, dbUsers, "Использует", "JDBC")
+
+@enduml

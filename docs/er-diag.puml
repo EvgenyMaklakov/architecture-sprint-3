@@ -1,0 +1,89 @@
+@startuml
+' Настройка стиля
+skinparam linetype ortho
+skinparam roundcorner 15
+skinparam shadowing false
+
+' Определение сущностей
+entity users {
+    * id : UUID <<PK>>
+    --
+    username : String
+    email : String
+    password_hash : String
+    created_at : DateTime
+    updated_at : DateTime
+}
+
+entity houses {
+    * id : UUID <<PK>>
+    --
+    user_id : UUID <<FK>>
+    name : String
+    address : String
+    created_at : DateTime
+    updated_at : DateTime
+}
+
+entity devices {
+    * id : UUID <<PK>>
+    --
+    house_id : UUID <<FK>>
+    type_id : UUID <<FK>>
+    name : String
+    status : String
+    created_at : DateTime
+    updated_at : DateTime
+}
+
+entity device_types {
+    * id : UUID <<PK>>
+    --
+    type_name : String
+    description : String
+}
+
+entity scripts {
+    * id : UUID <<PK>>
+    --
+    user_id : UUID <<FK>>
+    name : String
+    description : String
+    trigger_condition : String
+    action : String
+    created_at : DateTime
+    updated_at : DateTime
+}
+
+entity telemetry {
+    * id : UUID <<PK>>
+    --
+    device_id : UUID <<FK>>
+    timestamp : DateTime
+    value : Float
+    unit : String
+}
+
+entity controllers {
+    * id : UUID <<PK>>
+    --
+    name : String
+    ip_address : String
+    status : String
+}
+
+entity script_device {
+    * script_id : UUID <<FK>>
+    * device_id : UUID <<FK>>
+}
+
+' Связи между сущностями
+users ||--o{ houses : "владеет"
+houses ||--o{ devices : "содержит"
+users ||--o{ scripts : "создает"
+devices ||--o{ telemetry : "имеет"
+scripts }o--o{ devices : "управляет через" <<script_device>>
+controllers ||--o{ devices : "управляет"
+device_types ||--o{ devices : "определяет"
+
+@enduml

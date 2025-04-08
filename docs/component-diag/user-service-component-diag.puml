@@ -1,0 +1,22 @@
+@startuml "warmhouse"
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container(gateway, "Gateway API", "Java, Spring Boot", "Маршрутизация запросов")
+Container_Ext(authService, "Сервис IaM", "Keycloak",)
+ContainerDb(dbUsers, "База данных пользователей", "PostgreSQL", "Хранение и предоставление данных о пользователях")
+
+
+Container_Boundary(userServiceCont, "Сервис пользователей") {
+    Component(userController, "User Controller", "Rest Controller", "Обработка вызовов API")
+    Component(userService, "User Service", "Spring Bean", "Слой бизнес логики")
+    Component(userRepository, "User Repository", "Spring Bean", "Работа с данными о пользователях")
+
+    Rel(userController, userService, "Использует")
+    Rel(userService, userRepository, "Использует")
+}
+
+Rel(userService, authService, "Связь между профилем пользователя и учетной записью", "HTTPS")
+Rel(gateway, userController, "Вызов API методов", "HTTPS")
+BiRel(userRepository, dbUsers, "Использует", "JDBC")
+
+@enduml

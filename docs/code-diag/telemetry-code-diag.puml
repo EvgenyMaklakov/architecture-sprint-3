@@ -1,0 +1,32 @@
+@startuml
+
+class TelemetryController {
+    +getTelemetryData(deviceId: uuid): List<Telemetry>
+}
+
+class TelemetryService {
+    +processTelemetryData(data: TelemetryData): void
+    +fetchLatestData(deviceId: uuid): Telemetry
+    +sendToKafka(data: TelemetryData): void
+}
+
+class TelemetryKafkaProducer {
+    +sendMessage(topic: String, message: String): void
+}
+
+class TelemetryRepository {
+    +save(data: TelemetryData): void
+    +findByDeviceId(deviceId: uuid): List<Telemetry>
+}
+
+class ExternalControllerClient {
+    +fetchDeviceData(deviceId: uuid): DeviceData
+    +sendCommand(deviceId: uuid, command: String): void
+}
+
+TelemetryController --> TelemetryService : "Использует"
+TelemetryService --> TelemetryRepository : "Использует для хранения данных"
+TelemetryService --> ExternalControllerClient : "Получает данные с устройств"
+TelemetryService --> TelemetryKafkaProducer : "Отправляет данные в Kafka"
+
+@enduml
