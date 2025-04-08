@@ -10,7 +10,7 @@ Container_Boundary(telemetryServiceCont, "Сервис телеметрии") {
     Component(telemetryController, "Telemetry Controller", "Rest Controller", "Обработка вызовов API")
     Component(telemetryService, "Telemetry Service", "Spring Bean", "Слой бизнес логики")
     Component(telemetryKafkaProducer, "Telemetry Kafka Producer", "Spring Bean", "Продюсер Kafka")
-    Component(telemetryRepository, "Telemetry Repository", "Spring Bean", "Работа с данными об устройствах")
+    Component(telemetryRepository, "Telemetry Repository", "Spring Bean", "Работа с данными")
     Component(extControllerClient, "External Controller Client", "Spring Bean", "Отправка запросов к контроллеру устройств")
 
     Rel(telemetryController, telemetryService, "Использует")
